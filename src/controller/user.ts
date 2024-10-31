@@ -147,12 +147,31 @@ async function removeBlogByUser(
   const { blogId } = req.body;
   const authUser = req.authUser!;
 
+  const userId = authUser._id as string;
+
   try {
     // remove from users bloglists
-    const updatedUser = await userService.deleteItemFromLists();
+    const updatedUser = await userService.deleteItemFromLists(
+      "_id",
+      userId,
+      "blogs",
+      blogId
+    );
+    if (!updatedUser) {
+      customError("Item is not deleted", 400);
+    }
 
     // remove blog
-    // const deletedBlog =
+    const removedBlog = await blogService.deleteBlog("_id", blogId);
+    if (!removedBlog) {
+      customError("blog deletation failed");
+    }
+
+    res.status(200).json({
+      message: "blog deleted successfully",
+      success: true,
+      deletedBlog: removedBlog,
+    });
   } catch (error) {
     next(error);
   }
