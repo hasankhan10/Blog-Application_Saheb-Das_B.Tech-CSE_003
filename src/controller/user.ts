@@ -75,7 +75,7 @@ async function createPostByUser(
     }
 
     // set blog id in user
-    const updatedUser = await userService.updateUser(
+    const updatedUser = await userService.addItemToLists(
       "_id",
       userId,
       "blogs",
@@ -102,6 +102,7 @@ interface IModifyBlog {
   keywords?: string[];
 }
 
+// modify exist blog by user
 async function modifyExistBlogByUser(
   req: Request,
   res: Response,
@@ -127,13 +128,31 @@ async function modifyExistBlogByUser(
       customError("blog updation failed", 401);
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Blog updated successfully",
-        success: true,
-        updatedBlog: updatedBlog,
-      });
+    res.status(200).json({
+      message: "Blog updated successfully",
+      success: true,
+      updatedBlog: updatedBlog,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// delete blog by user
+async function removeBlogByUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { blogId } = req.body;
+  const authUser = req.authUser!;
+
+  try {
+    // remove from users bloglists
+    const updatedUser = await userService.deleteItemFromLists();
+
+    // remove blog
+    // const deletedBlog =
   } catch (error) {
     next(error);
   }
@@ -168,5 +187,6 @@ export default {
   createPostByUser,
   modifyUser,
   modifyExistBlogByUser,
+  removeBlogByUser,
   removeUser,
 };

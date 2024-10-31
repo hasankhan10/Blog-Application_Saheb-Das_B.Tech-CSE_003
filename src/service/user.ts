@@ -67,11 +67,37 @@ async function deleteUser(key: string, value: string) {
   }
 }
 
+async function addItemToLists(
+  key: string,
+  userId: string,
+  field: string,
+  payload: string
+) {
+  return await User.updateOne(
+    { [key]: userId },
+    { $push: { [field]: payload } } // adds newItem to the items array
+  );
+}
+
+async function deleteItemFromLists(
+  key: string,
+  userId: string,
+  field: string,
+  payload: string
+) {
+  return await User.updateOne(
+    { [key]: userId },
+    { $pull: { [field]: payload } } // adds newItem to the items array
+  );
+}
+
 // export
 export default {
   findUser,
   findUserByProperty,
   postUser,
+  addItemToLists,
+  deleteItemFromLists,
   updateUser,
   deleteUser,
 };

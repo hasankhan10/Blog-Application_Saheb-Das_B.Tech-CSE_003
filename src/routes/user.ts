@@ -24,7 +24,15 @@ router.get("/", userController.getAllUser);
  */
 router.post("/create-blog", userController.createPostByUser);
 
+/**
+ * @description - update exist blog by user
+ */
 router.post("/update-blog", userController.modifyExistBlogByUser);
+
+/**
+ * @description - delete blog from user
+ */
+router.delete("/delete-blog", userController.removeBlogByUser);
 
 /**
  * @description - update user
