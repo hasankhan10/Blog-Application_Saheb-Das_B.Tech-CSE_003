@@ -17,9 +17,9 @@ async function findUser() {
 async function findUserByProperty(key: string, value: string) {
   let user;
   if (key === "_id") {
-    user = await User.findById(value).exec();
+    user = await User.findById(value).populate("blogs");
   } else {
-    user = await User.findOne({ [key]: value }).exec();
+    user = await User.findOne({ [key]: value }).populate("blogs");
   }
 
   if (!user) {
