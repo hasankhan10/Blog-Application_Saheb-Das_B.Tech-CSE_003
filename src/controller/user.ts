@@ -102,6 +102,31 @@ interface IModifyBlog {
   keywords?: string[];
 }
 
+// get all loggedIn user blog lists
+async function getAllBlogsInUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = req.authUser?._id as string;
+
+    const user = await userService.findUserByProperty("_id", userId);
+    if (!user) {
+      customError("user not found", 400);
+    }
+
+    res.status(200).json({
+      message: "blogs get successfully",
+      username: user.name,
+      blogs: user.blogs,
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // modify exist blog by user
 async function modifyExistBlogByUser(
   req: Request,
@@ -207,5 +232,6 @@ export default {
   modifyUser,
   modifyExistBlogByUser,
   removeBlogByUser,
+  getAllBlogsInUser,
   removeUser,
 };

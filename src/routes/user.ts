@@ -34,6 +34,8 @@ router.post("/update-blog", userController.modifyExistBlogByUser);
  */
 router.delete("/delete-blog", userController.removeBlogByUser);
 
+router.get("/blogs", userController.getAllBlogsInUser);
+
 /**
  * @description - update user
  */
