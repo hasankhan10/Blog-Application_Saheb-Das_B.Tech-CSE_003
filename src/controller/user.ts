@@ -43,6 +43,7 @@ async function getAllUser(req: Request, res: Response, next: NextFunction) {
 }
 
 interface IBlogContent {
+  title: string;
   description: string;
   keywords: string[];
 }
@@ -57,13 +58,11 @@ async function createPostByUser(
   const blogContent = req.body;
 
   try {
-    const { description, keywords }: IBlogContent = blogContent;
+    const { title, description, keywords }: IBlogContent = blogContent;
     const userId = user._id as string;
 
-    // TODO: get title func
-
     const blogPayload = {
-      title: "default",
+      title: title,
       description: description,
       keywords: [...keywords],
       creator: userId,
@@ -86,12 +85,54 @@ async function createPostByUser(
       customError("user update fails", 400);
     }
 
+    res.status(200).json({
+      message: "blog created successfully",
+      success: true,
+      blog: blog,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+interface IModifyBlog {
+  id: string;
+  title?: string;
+  description?: string;
+  keywords?: string[];
+}
+
+async function modifyExistBlogByUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const blogDetails: IModifyBlog = req.body;
+
+  try {
+    const { id, title, description, keywords } = blogDetails;
+
+    const updatedBlogPart = {
+      title: title,
+      description: description,
+      keywords: keywords,
+    };
+
+    const updatedBlog = await blogService.updateManyInBlog(
+      "_id",
+      id,
+      updatedBlogPart
+    );
+    if (!updatedBlog) {
+      customError("blog updation failed", 401);
+    }
+
     res
       .status(200)
       .json({
-        message: "blog created successfully",
+        message: "Blog updated successfully",
         success: true,
-        blog: blog,
+        updatedBlog: updatedBlog,
       });
   } catch (error) {
     next(error);
@@ -126,5 +167,6 @@ export default {
   getAllUser,
   createPostByUser,
   modifyUser,
+  modifyExistBlogByUser,
   removeUser,
 };

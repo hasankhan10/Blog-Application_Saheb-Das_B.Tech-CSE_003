@@ -19,7 +19,12 @@ router.get("/:userId", userController.getUser);
  */
 router.get("/", userController.getAllUser);
 
+/**
+ * @description - create a new blog by user
+ */
 router.post("/create-blog", userController.createPostByUser);
+
+router.post("/update-blog", userController.modifyExistBlogByUser);
 
 /**
  * @description - update user

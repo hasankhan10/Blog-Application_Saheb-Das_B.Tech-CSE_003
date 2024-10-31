@@ -30,7 +30,7 @@ async function postBlog(payload: IBlog) {
   return newBlog;
 }
 
-// update blog
+// update single property of blog
 async function updateBlog(
   key: string,
   value: string,
@@ -52,6 +52,27 @@ async function updateBlog(
   }
 }
 
+// update blog of more than one properties of a blog
+async function updateManyInBlog(
+  key: string,
+  value: string,
+  updatedObj: Record<string, any>
+) {
+  if (key === "_id") {
+    return await Blog.findByIdAndUpdate(
+      { [key]: value },
+      { $set: updatedObj },
+      { new: true }
+    );
+  } else {
+    return await Blog.findOneAndUpdate(
+      { [key]: value },
+      { $set: updatedObj },
+      { new: true }
+    );
+  }
+}
+
 // delete blog by property
 async function deleteBlog(key: string, value: string) {
   if (key === "_id") {
@@ -67,5 +88,6 @@ export default {
   findBlogByProperty,
   postBlog,
   updateBlog,
+  updateManyInBlog,
   deleteBlog,
 };
