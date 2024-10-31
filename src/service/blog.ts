@@ -76,9 +76,9 @@ async function updateManyInBlog(
 // delete blog by property
 async function deleteBlog(key: string, value: string) {
   if (key === "_id") {
-    return await Blog.findByIdAndDelete(value);
+    return await Blog.findByIdAndDelete(value).exec();
   } else {
-    return await Blog.findOneAndDelete({ [key]: value });
+    return await Blog.findOneAndDelete({ [key]: value }).exec();
   }
 }
 

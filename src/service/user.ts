@@ -85,6 +85,8 @@ async function deleteItemFromLists(
   field: string,
   payload: string
 ) {
+  console.log();
+
   return await User.updateOne(
     { [key]: userId },
     { $pull: { [field]: payload } } // adds newItem to the items array
